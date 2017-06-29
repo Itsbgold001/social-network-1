@@ -6,7 +6,7 @@ include('classes/DB.php');
         $email = $_POST['email'];
         if(!DB::query('SELECT username FROM users WHERE username=:username',array(':username'=>$username))){
             if(strlen($username) <= 32 && strlen($username) >=3){
-                if(preg_match('/[a-zA-Z0-9_]/+',$username)){  
+                if(preg_match('/[a-zA-Z0-9_]/',$username)){  
                     if(strlen($password) >= 6 && strlen($password) <= 60){
                     if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                         DB::query('INSERT INTO users VALUES (\'\',:username,:password,:email)',array(':username'=>$username,':password'=>password_hash($password,PASSWORD_BCRYPT),':email'=>$email));
