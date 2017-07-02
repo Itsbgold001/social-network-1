@@ -1,5 +1,4 @@
 <?php
-
 class Login{
     public static function isLoggedIn(){
         if(isset($_COOKIE['SNID'])){
@@ -23,5 +22,4 @@ class Login{
         return false;
     }   
 }
-    
 ?>
