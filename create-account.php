@@ -12,7 +12,7 @@ include('classes/DB.php');
                         
                         if(!DB::query('SELECT email FROM users where email=:email',array(':email'=>$email))){
                         
-                        DB::query('INSERT INTO users VALUES (\'\',:username,:password,:email)',array(':username'=>$username,':password'=>password_hash($password,PASSWORD_BCRYPT),':email'=>$email));
+                        DB::query('INSERT INTO users VALUES (\'\',:username,:password,:email,\'0\')',array(':username'=>$username,':password'=>password_hash($password,PASSWORD_BCRYPT),':email'=>$email));
                         echo "Success!";
                         }else{
                             echo "email in use";                            
