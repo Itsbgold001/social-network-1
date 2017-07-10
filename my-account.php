@@ -1,4 +1,11 @@
 <?php
+include('classes/DB.php');
+include('classes/Login.php');
+if(Login::isLoggedIn()){
+    $userid = Login::isLoggedIn();
+}else{
+    die('Not Logged In');
+}
     if(isset($_POST['uploadprofileimg'])){
         $image = base64_encode(file_get_contents($_FILES['profileimg']['tmp_name']));
         $options = array('http'=>array(
@@ -9,8 +16,13 @@
         ));
         $context = stream_context_create($options);
         $imgurURL = 'https://api.imgur.com/3/image';
-        print_r($_FILES);
+        if($_FILES['profileimg']['size'] > 10240000){
+            die('Image too big, must be less than 10MB');
+        }
+        //print_r($_FILES);
         $response = file_get_contents($imgurURL, false, $context);
+        $response = json_decode($response);
+        DB::query('UPDATE users SET profileimg=:profileimg WHERE id=:userid',array(':profileimg'=>$response->data->link, ':userid'=>$userid));
     }
 ?>
 
