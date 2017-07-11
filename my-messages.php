@@ -1,3 +1,4 @@
+
 <?php
 include('./classes/DB.php');
 include('./classes/Login.php');
@@ -7,7 +8,7 @@ if (Login::isLoggedIn()) {
         die('Not logged in');
 }
 if (isset($_GET['mid'])) {
-        $message = DB::query('SELECT * FROM messages WHERE id=:mid AND receiver=:receiver OR sender=:sender', array(':mid'=>$_GET['mid'], ':receiver'=>$userid, ':sender'=>$userid))[0];
+        $message = DB::query('SELECT * FROM messages WHERE id=:mid AND (receiver=:receiver OR sender=:sender)', array(':mid'=>$_GET['mid'], ':receiver'=>$userid, ':sender'=>$userid))[0];
         echo '<h1>View Message</h1>';
         echo htmlspecialchars($message['body']);
         echo '<hr />';
@@ -16,7 +17,7 @@ if (isset($_GET['mid'])) {
         } else {
                 $id = $message['sender'];
         }
-        DB::query('UPDATE messages SET `read_value`=1 WHERE id=:mid', array (':mid'=>$_GET['mid']));
+        DB::query('UPDATE messages SET `read`=1 WHERE id=:mid', array (':mid'=>$_GET['mid']));
         ?>
         <form action="send-message.php?receiver=<?php echo $id; ?>" method="post">
                 <textarea name="body" rows="8" cols="80"></textarea>
@@ -34,7 +35,7 @@ foreach ($messages as $message) {
         } else {
                 $m = $message['body'];
         }
-        if ($message['read_value'] == 0) {
+        if ($message['read'] == 0) {
                 echo "<a href='my-messages.php?mid=".$message['id']."'><strong>".$m."</strong></a> sent by ".$message['username'].'<hr />';
         } else {
                 echo "<a href='my-messages.php?mid=".$message['id']."'>".$m."</a> sent by ".$message['username'].'<hr />';
