@@ -17,7 +17,7 @@ class Post {
                 }
                 $topics = self::getTopics($postbody);
                 if ($loggedInUserId == $profileUserId) {
-                        DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\')', array(':postbody'=>$postbody, ':userid'=>$profileUserId));
+                        DB::query('INSERT INTO posts VALUES (\'\', :postbody, NOW(), :userid, 0, \'\', \'\')', array(':postbody'=>$postbody, ':userid'=>$profileUserId, ':topics'=>$topics));
                         $postid = DB::query('SELECT id FROM posts WHERE user_id=:userid ORDER BY ID DESC LIMIT 1;', array(':userid'=>$loggedInUserId))[0]['id'];
                         return $postid;
                 } else {
@@ -35,11 +35,11 @@ class Post {
         }
         public static function getTopics($text) {
                 $text = explode(" ", $text);
-                $topics="";
+                $topics = "";
                 foreach ($text as $word) {
                         if (substr($word, 0, 1) == "#") {
-                                $topics.=substr($word, 1).","; 
-                        }                        
+                                $topics .= substr($word, 1).",";
+                        }
                 }
                 return $topics;
         }
@@ -49,12 +49,11 @@ class Post {
                 foreach ($text as $word) {
                         if (substr($word, 0, 1) == "@") {
                                 $newstring .= "<a href='profile.php?username=".substr($word, 1)."'>".htmlspecialchars($word)."</a> ";
-                        }else if (substr($word, 0, 1) == "#") {
+                        } else if (substr($word, 0, 1) == "#") {
                                 $newstring .= "<a href='topics.php?topic=".substr($word, 1)."'>".htmlspecialchars($word)."</a> ";
                         } else {
                                 $newstring .= htmlspecialchars($word)." ";
                         }
-                        
                 }
                 return $newstring;
         }
@@ -67,16 +66,24 @@ class Post {
                                 <form action='profile.php?username=$username&postid=".$p['id']."' method='post'>
                                         <input type='submit' name='like' value='Like'>
                                         <span>".$p['likes']." likes</span>
-                                </form>
-                                <hr /></br />
+                                ";
+                                if ($userid == $loggedInUserId) {
+                                        $posts .= "<input type='submit' name='deletepost' value='x' />";
+                                }
+                                $posts .= "
+                                </form><hr /></br />
                                 ";
                         } else {
                                 $posts .= "<img src='".$p['postimg']."'>".self::link_add($p['body'])."
                                 <form action='profile.php?username=$username&postid=".$p['id']."' method='post'>
-                                        <input type='submit' name='unlike' value='Unlike'>
-                                        <span>".$p['likes']." likes</span>
-                                </form>
-                                <hr /></br />
+                                <input type='submit' name='unlike' value='Unlike'>
+                                <span>".$p['likes']." likes</span>
+                                ";
+                                if ($userid == $loggedInUserId) {
+                                        $posts .= "<input type='submit' name='deletepost' value='x' />";
+                                }
+                                $posts .= "
+                                </form><hr /></br />
                                 ";
                         }
                 }
