@@ -8,14 +8,16 @@ if (Login::isLoggedIn()) {
         $userid = Login::isLoggedIn();
         $showTimeline = True;
 } else {
-        echo 'Not logged in';
+        die('Not logged in');
 }
+
 if (isset($_GET['postid'])) {
         Post::likePost($_GET['postid'], $userid);
 }
 if (isset($_POST['comment'])) {
         Comment::createComment($_POST['commentbody'], $_GET['postid'], $userid);
 }
+
 if (isset($_POST['searchbox'])) {
         $tosearch = explode(" ", $_POST['searchbox']);
         if (count($tosearch) == 1) {
@@ -29,6 +31,7 @@ if (isset($_POST['searchbox'])) {
         }
         $users = DB::query('SELECT users.username FROM users WHERE users.username LIKE :username '.$whereclause.'', $paramsarray);
         print_r($users);
+
         $whereclause = "";
         $paramsarray = array(':body'=>'%'.$_POST['searchbox'].'%');
         for ($i = 0; $i < count($tosearch); $i++) {
@@ -42,6 +45,7 @@ if (isset($_POST['searchbox'])) {
         print_r($posts);
         echo '</pre>';
 }
+
 ?>
 
 <form action="index.php" method="post">
@@ -50,15 +54,20 @@ if (isset($_POST['searchbox'])) {
 </form>
 
 <?php
+
 $followingposts = DB::query('SELECT posts.id, posts.body, posts.likes, users.`username` FROM users, posts, followers
 WHERE posts.user_id = followers.user_id
 AND users.id = posts.user_id
 AND follower_id = :userid
 ORDER BY posts.likes DESC;', array(':userid'=>$userid));
+
 foreach($followingposts as $post) {
+
         echo $post['body']." ~ ".$post['username'];
         echo "<form action='index.php?postid=".$post['id']."' method='post'>";
+
         if (!DB::query('SELECT post_id FROM post_likes WHERE post_id=:postid AND user_id=:userid', array(':postid'=>$post['id'], ':userid'=>$userid))) {
+
         echo "<input type='submit' name='like' value='Like'>";
         } else {
         echo "<input type='submit' name='unlike' value='Unlike'>";
@@ -73,5 +82,9 @@ foreach($followingposts as $post) {
         Comment::displayComments($post['id']);
         echo "
         <hr /></br />";
+
+
 }
+
+
 ?>

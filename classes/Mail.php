@@ -9,12 +9,13 @@ class Mail {
                 $mail->Host = 'smtp.gmail.com';
                 $mail->Port = '465';
                 $mail->isHTML();
-                $mail->Username = 'username@gmail.com';
-                $mail->Password = 'password';
-                $mail->SetFrom('no-reply@domain.in');
+                $mail->Username = 'socialnetworkmail2@gmail.com';
+                $mail->Password = '368276b2fb0439a3';
+                $mail->SetFrom('no-reply@howcode.org');
                 $mail->Subject = $subject;
                 $mail->Body = $body;
                 $mail->AddAddress($address);
+
                 $mail->Send();
         }
 }

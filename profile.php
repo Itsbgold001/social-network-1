@@ -4,17 +4,22 @@ include('./classes/Login.php');
 include('./classes/Post.php');
 include('./classes/Image.php');
 include('./classes/Notify.php');
+
 $username = "";
 $verified = False;
 $isFollowing = False;
 if (isset($_GET['username'])) {
         if (DB::query('SELECT username FROM users WHERE username=:username', array(':username'=>$_GET['username']))) {
+
                 $username = DB::query('SELECT username FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['username'];
                 $userid = DB::query('SELECT id FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['id'];
                 $verified = DB::query('SELECT verified FROM users WHERE username=:username', array(':username'=>$_GET['username']))[0]['verified'];
                 $followerid = Login::isLoggedIn();
+
                 if (isset($_POST['follow'])) {
+
                         if ($userid != $followerid) {
+
                                 if (!DB::query('SELECT follower_id FROM followers WHERE user_id=:userid AND follower_id=:followerid', array(':userid'=>$userid, ':followerid'=>$followerid))) {
                                         if ($followerid == 6) {
                                                 DB::query('UPDATE users SET verified=1 WHERE id=:userid', array(':userid'=>$userid));
@@ -27,7 +32,9 @@ if (isset($_GET['username'])) {
                         }
                 }
                 if (isset($_POST['unfollow'])) {
+
                         if ($userid != $followerid) {
+
                                 if (DB::query('SELECT follower_id FROM followers WHERE user_id=:userid AND follower_id=:followerid', array(':userid'=>$userid, ':followerid'=>$followerid))) {
                                         if ($followerid == 6) {
                                                 DB::query('UPDATE users SET verified=0 WHERE id=:userid', array(':userid'=>$userid));
@@ -41,6 +48,7 @@ if (isset($_GET['username'])) {
                         //echo 'Already following!';
                         $isFollowing = True;
                 }
+
                 if (isset($_POST['deletepost'])) {
                         if (DB::query('SELECT id FROM posts WHERE id=:postid AND user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid))) {
                                 DB::query('DELETE FROM posts WHERE id=:postid and user_id=:userid', array(':postid'=>$_GET['postid'], ':userid'=>$followerid));
@@ -48,6 +56,8 @@ if (isset($_GET['username'])) {
                                 echo 'Post deleted!';
                         }
                 }
+
+
                 if (isset($_POST['post'])) {
                         if ($_FILES['postimg']['size'] == 0) {
                                 Post::createPost($_POST['postbody'], Login::isLoggedIn(), $userid);
@@ -56,14 +66,19 @@ if (isset($_GET['username'])) {
                                 Image::uploadImage('postimg', "UPDATE posts SET postimg=:postimg WHERE id=:postid", array(':postid'=>$postid));
                         }
                 }
+
                 if (isset($_GET['postid']) && !isset($_POST['deletepost'])) {
                         Post::likePost($_GET['postid'], $followerid);
                 }
+
                 $posts = Post::displayPosts($userid, $username, $followerid);
+
+
         } else {
                 die('User not found!');
         }
 }
+
 ?>
 <h1><?php echo $username; ?>'s Profile<?php if ($verified) { echo ' - Verified'; } ?></h1>
 <form action="profile.php?username=<?php echo $username; ?>" method="post">
