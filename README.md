@@ -6,6 +6,6 @@ Below is a website I made using parts of the above code.
 
 Abodemart aims at creating a hassle free platform for college students looking to buy and sell furniture, electronics, books, vehicles and a lot more. Take a picture with your mobile, describe your product and sell in one click. If you are looking for a specific item to buy, With Abodemart there is no intermediary, get in touch directly with the seller! Moving in and out, now made easy!
 
-[a link](www.abodemart.in)
+[Visit Abodemart](www.abodemart.in)
 
 ![alt text](https://github.com/siddharthkul/social_network/blob/master/screenshot.png)
