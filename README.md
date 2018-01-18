@@ -8,4 +8,6 @@ Cheers !
 
 [Click here to visit Abodemart](https://www.abodemart.in "Abodemart's Homepage")
 
+![alt -text](https://github.com/siddharthkul/social-network/blob/master/abodemart.png)
+
 ![alt text](https://github.com/siddharthkul/social_network/blob/master/screenshot.png)
